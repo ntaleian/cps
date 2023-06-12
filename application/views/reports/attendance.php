@@ -25,16 +25,33 @@
 
                       <input type="hidden" name="SessionID" value="<?php echo get_current_session($this); ?> ">
 
-                      <div class="col-6">
-                        <fieldset class="form-label-group position-relative has-icon-left">
+                      <div class="col-3">
+                        <!-- <fieldset class="form-label-group position-relative has-icon-left">
                             <input type="text" class="form-control daterange" placeholder="Select Date" id="ReqDate" name="ReqDate">
                             <div class="form-control-position">
                                 <i class='bx bx-calendar-check'></i>
+                            </div>
+                        </fieldset> -->
+                        <fieldset class="form-group position-relative has-icon-left">
+                          <label for="basicInput">Start Date</label>
+                            <input type="text" class="form-control single-daterange" value="" name="FromDate">
+                            <div class="form-control-position">
+                                <i class='bx bx-calendar-check' style="top: 20px !important"></i>
+                            </div>
+                        </fieldset>
+                      </div>
+                      <div class="col-3">
+                        <fieldset class="form-group position-relative has-icon-left">
+                          <label for="basicInput">End Date</label>
+                            <input type="text" class="form-control single-daterange" value="" name="ToDate">
+                            <div class="form-control-position">
+                                <i class='bx bx-calendar-check' style="top: 20px !important"></i>
                             </div>
                         </fieldset>
                       </div>
 
                       <div class="col-3">
+                        <div style="top: 12px;">&nbsp;</div>
                         <button type="submit" name="submit" value="submit" class="btn btn-primary mr-1">Generate Report</button>
                       </div>
 

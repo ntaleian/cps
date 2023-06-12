@@ -18,6 +18,49 @@
                       Field Trips Reports
                     </h4>
                   </div>
+
+                  <form id="oversightForm" class="form" action="<?php echo base_url() ?>session_reports/field_trip_report" method="get">
+
+                    <div class="row col-12">
+
+                      <div class="col-6">
+                        <h6>Choose Session</h6>
+                        <div class="form-group">
+                          <select class="select2 form-control" name="session_id" required>
+                            <option disabled="" selected=""> -- Select Session -- </option>
+                            <?php
+                              if(!empty($sessions))
+                              {
+                                foreach($sessions as $session){
+                            ?>
+                            <option value="<?php echo $session['EntryID']; ?>"><?php echo $session['SessionName'] ?></option>
+                            <?php
+                                }
+                              }
+                            ?>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="col-3">
+                        <div style="top: 12px;">&nbsp;</div>
+                        <button type="submit" name="submit" value="submit" class="btn btn-primary mr-1">Generate Report</button>
+                      </div>
+
+                    </div>
+                  </form>
+
+                  <div class="col-12">
+                    <div class="alert bg-rgba-primary mb-0" role="alert">
+                      <div class="d-flex align-items-center">
+                        <i class="bx bx-line-chart"></i>
+                        <span>
+                          <?php echo $msg; ?>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
                   <div class="card-body card-dashboard">
                     <p class="card-text">
                       Committees List
@@ -44,8 +87,21 @@
                                 <?php 
                                   $commID = $committee['EntryID'];
                                   $commTitle = $committee['Title'];
+
+                                  if(!empty($_GET['session_id']))
+                                  {
+                                    $session = $_GET['session_id'];
+
+                                    $url_txt = "&session=".$session;
+
+                                  }
+                                  else
+                                  {
+                                    $url_txt = "&session=".get_current_session($this);
+                                  }
+
                                 ?>
-                                <td><a href="<?php echo base_url(); ?>session_reports/view_committee_oversight?id=<?php echo $commID; ?>&committee=<?php echo $commTitle; ?>"><?php echo $committee['Title']; ?></a></td>
+                                <td><a href="<?php echo base_url(); ?>session_reports/view_committee_oversight?id=<?php echo $commID; ?>&committee=<?php echo $commTitle.$url_txt; ?>"><?php echo $committee['Title']; ?></a></td>
                                 <td><?php echo $committee['Category']; ?></td>
                                 <td><?php echo $committee['OversightCount']; ?></td>
                                 <td><?php echo $committee['ReportConcluded']; ?></td>

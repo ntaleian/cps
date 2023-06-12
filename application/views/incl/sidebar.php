@@ -73,6 +73,27 @@
             </ul>
           </li>
 
+          <li class=" nav-item"><a href="#"><i class="menu-livicon" data-icon="bar-chart"></i><span class="menu-title text-truncate" data-i18n="User">Session Reports</span></a>
+            <ul class="menu-content">
+              <li class="<?php if($active == 'report_att_sess'){ echo 'active'; } ?>"><a class="d-flex align-items-center" href="<?php echo base_url(); ?>session_reports/attendance_report"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="List">Attendance Reports</span></a>
+              </li>
+              <li class="<?php if($active == 'report_att_mp_sess'){ echo 'active'; } ?>"><a class="d-flex align-items-center" href="<?php echo base_url(); ?>session_reports/attendance_mp"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="View">Attendance by MPs</span></a>
+              </li>
+              <li class="<?php if($active == 'report_bills_sess'){ echo 'active'; } ?>"><a class="d-flex align-items-center" href="<?php echo base_url(); ?>session_reports/bills_report"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Edit">Bills</span></a>
+              </li>
+              <li class="<?php if($active == 'report_ft_sess'){ echo 'active'; } ?>"><a class="d-flex align-items-center" href="<?php echo base_url(); ?>session_reports/field_trip_report"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Edit">Field Trips</span></a>
+              </li>
+              <li class="<?php if($active == 'report_ta_sess'){ echo 'active'; } ?>"><a class="d-flex align-items-center" href="<?php echo base_url(); ?>session_reports/travels_abroad_report"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Edit">Travels Abroad</span></a>
+              </li>
+              <!-- <li class="<?php #if($active == 'report_mps_sess'){ echo 'active'; } ?>"><a class="d-flex align-items-center" href="<?php #echo base_url(); ?>session_reports/mps_report"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Edit">Individual MPs</span></a>
+              </li>
+              <li class="<?php #if($active == 'report_alloc_sess'){ echo 'active'; } ?>"><a class="d-flex align-items-center" href="<?php #echo base_url(); ?>session_reports/budget_allocation"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Edit">Committee Budgets</span></a>
+              </li>
+              <li class="<?php #if($active == 'mps_history_sess'){ echo 'active'; } ?>"><a class="d-flex align-items-center" href="<?php #echo base_url(); ?>session_reports/committee_history"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Edit">Committee History</span></a> -->
+              </li>
+            </ul>
+          </li>
+
           <?php if($this->session->userdata('alluserdata')[0]['Usertype'] == "super" || $this->session->userdata('alluserdata')[0]['Usertype'] == "overall"){ ?>
 
           <li class=" navigation-header text-truncate"><span data-i18n="UI Elements">Settings</span>

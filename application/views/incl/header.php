@@ -15,7 +15,7 @@
               <li class="nav-item d-none d-lg-block"><a class="nav-link nav-link-expand"><i class="ficon bx bx-fullscreen"></i></a></li>
               
               <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="javascript:void(0);" data-toggle="dropdown">
-                  <div class="user-nav d-sm-flex d-none"><span class="user-name"><?php echo $this->session->userdata('alluserdata')[0]['Firstname']." ".$this->session->userdata('alluserdata')[0]['Lastname']; ?></span><span class="user-status text-muted"><?php echo $this->session->userdata('alluserdata')[0]['Email']; ?></span></div><span><img class="round" src="<?php echo base_url(); ?>assets/app-assets/images/portrait/small/user.png" alt="avatar" height="40" width="40"></span></a>
+                  <div class="user-nav d-sm-flex d-none"><span class="user-name"><?php echo $this->session->userdata('alluserdata')[0]['Firstname']." ".$this->session->userdata('alluserdata')[0]['Lastname']; ?></span><span class="user-status text-muted"><?php echo strtoupper($this->session->userdata('alluserdata')[0]['Usertype'])." USER"." <br/>".$this->session->userdata('alluserdata')[0]['Email']; ?></span></div><span><img class="round" src="<?php echo base_url(); ?>assets/app-assets/images/portrait/small/user.png" alt="avatar" height="40" width="40"></span></a>
                 <div class="dropdown-menu dropdown-menu-right pb-0">
                   <a class="dropdown-item" href="<?php echo base_url(); ?>settings/user_profile"><i class="bx bx-user mr-50"></i> Edit Profile</a>
                   <div class="dropdown-divider mb-0"></div>

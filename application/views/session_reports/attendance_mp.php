@@ -19,35 +19,27 @@
                     </h4>
                   </div>
 
-                  <form id="oversightForm" class="form" action="<?php echo base_url() ?>reports/attendance_mp" method="get">
+                  <form id="oversightForm" class="form" action="<?php echo base_url() ?>session_reports/attendance_mp" method="get">
 
                     <div class="row col-12">
 
-                      <input type="hidden" name="SessionID" value="<?php echo get_current_session($this); ?> ">
-
-                      <div class="col-3">
-                        <!-- <fieldset class="form-label-group position-relative has-icon-left">
-                            <input type="text" class="form-control daterange" placeholder="Select Date" id="ReqDate" name="ReqDate">
-                            <div class="form-control-position">
-                                <i class='bx bx-calendar-check'></i>
-                            </div>
-                        </fieldset> -->
-                        <fieldset class="form-group position-relative has-icon-left">
-                          <label for="basicInput">Start Date</label>
-                            <input type="text" class="form-control single-daterange" value="" name="FromDate">
-                            <div class="form-control-position">
-                                <i class='bx bx-calendar-check' style="top: 20px !important"></i>
-                            </div>
-                        </fieldset>
-                      </div>
-                      <div class="col-3">
-                        <fieldset class="form-group position-relative has-icon-left">
-                          <label for="basicInput">End Date</label>
-                            <input type="text" class="form-control single-daterange" value="" name="ToDate">
-                            <div class="form-control-position">
-                                <i class='bx bx-calendar-check' style="top: 20px !important"></i>
-                            </div>
-                        </fieldset>
+                      <div class="col-6">
+                        <h6>Choose Session</h6>
+                        <div class="form-group">
+                          <select class="select2 form-control" name="session_id" required>
+                            <option disabled="" selected=""> -- Select Session -- </option>
+                            <?php
+                              if(!empty($sessions))
+                              {
+                                foreach($sessions as $session){
+                            ?>
+                            <option value="<?php echo $session['EntryID']; ?>"><?php echo $session['SessionName'] ?></option>
+                            <?php
+                                }
+                              }
+                            ?>
+                          </select>
+                        </div>
                       </div>
 
                       <div class="col-3">
@@ -93,21 +85,19 @@
                                 <td><?php echo $counter; ?></td>
                                 <?php 
                                   $commID = $committee['EntryID'];
-                                  if(!empty($_GET['ReqDate']))
+                                  if(!empty($_GET['session_id']))
                                   {
-                                    $daterange = $_GET['ReqDate'];
-                                    $end = date('Y-m-d', strtotime(substr($daterange, 13, 10)));
-                                    $start = date('Y-m-d', strtotime(substr($daterange, 0, 10)));
+                                    $session = $_GET['session_id'];
 
-                                    $url_txt = "&start=".$start."&end=".$end;
+                                    $url_txt = "&session=".$session;
 
                                   }
                                   else
                                   {
-                                    $url_txt = "";
+                                    $url_txt = "&session=".get_current_session($this);
                                   }
                                  ?>
-                                <td><a href="<?php echo base_url(); ?>reports/view_sittings_mp?id=<?php echo $commID.$url_txt; ?>"><?php echo $committee['Title']; ?></a></td>
+                                <td><a href="<?php echo base_url(); ?>session_reports/view_sittings_mp?id=<?php echo $commID.$url_txt; ?>"><?php echo $committee['Title']; ?></a></td>
                                 <td><?php echo $committee['Category']; ?></td>
                                 <td><?php echo $committee['NoOfMembers']; ?></td>
                                 <td><?php echo $committee['TimesSat']; ?></td>
@@ -116,18 +106,16 @@
                                   if(isset($_GET['submit']))
                                   {
 
-                                    $daterange = $_GET['ReqDate'];
-                                    $end = date('Y-m-d', strtotime(substr($daterange, 13, 10)));
-                                    $start = date('Y-m-d', strtotime(substr($daterange, 0, 10)));
+                                    $session = $_GET['session_id'];
 
-                                    $qstr = "DATE(SittingDate) >= '".date('Y-m-d', strtotime($start))."' AND DATE(SittingDate) <= '".date('Y-m-d', strtotime($end))."' AND ";
+                                    $qstr = "a.SessionID='".$session."' AND ";
                                   }
                                   else
                                   {
-                                    $qstr = "";
+                                    $qstr = "a.SessionID='".get_current_session($this)."' AND ";
                                   }
 
-                                  $query = $this->db->query("SELECT a.CommitteeID, a.SittingID, COUNT(a.SittingID) AS NoOfMps from attendance a LEFT JOIN sittings s ON a.SittingID=s.EntryID where a.SittingID=s.EntryID AND ".$qstr." a.AttendanceStatus='present' AND a.CommitteeID='".$committee['EntryID']."' AND a.SessionID='".get_current_session($this)."' group by a.CommitteeID, a.SittingID");
+                                  $query = $this->db->query("SELECT a.CommitteeID, a.SittingID, COUNT(a.SittingID) AS NoOfMps from attendance a LEFT JOIN sittings s ON a.SittingID=s.EntryID where a.SittingID=s.EntryID AND ".$qstr." a.AttendanceStatus='present' AND a.CommitteeID='".$committee['EntryID']."' group by a.CommitteeID, a.SittingID");
                                   if($query->num_rows() > 0){
                                     $query_res = $query->result_array();
 

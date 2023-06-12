@@ -21,8 +21,8 @@ class Reports extends CI_Controller {
 			$data['committees'] = $this->reports->get_custom_committees();
 
 			$daterange = $_GET['ReqDate'];
-			$end = date('Y-m-d', strtotime(substr($daterange, 13, 10)));
-			$start = date('Y-m-d', strtotime(substr($daterange, 0, 10)));
+			$end = date('Y-m-d', strtotime($_GET['ToDate']));
+			$start = date('Y-m-d', strtotime($_GET['FromDate']));
 
 			$data['msg'] = "Attendance Report From ".$start." To ".$end;
 		}
@@ -52,8 +52,11 @@ class Reports extends CI_Controller {
 			$data['committees'] = $this->reports->get_custom_committees();
 
 			$daterange = $_GET['ReqDate'];
-			$end = date('Y-m-d', strtotime(substr($daterange, 13, 10)));
-			$start = date('Y-m-d', strtotime(substr($daterange, 0, 10)));
+			// $end = date('Y-m-d', strtotime(substr($daterange, 13, 10)));
+			// $start = date('Y-m-d', strtotime(substr($daterange, 0, 10)));
+
+			$end = date('Y-m-d', strtotime($_GET['ToDate']));
+			$start = date('Y-m-d', strtotime($_GET['FromDate']));
 
 			$data['msg'] = "Attendance Report From ".$start." To ".$end;
 		}
