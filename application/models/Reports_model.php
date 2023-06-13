@@ -41,8 +41,13 @@ class Reports_model extends CI_Model {
 	function get_custom_committees()
 	{
 		$daterange = $_GET['ReqDate'];
-		$end = date('Y-m-d', strtotime(substr($daterange, 13, 10)));
-		$start = date('Y-m-d', strtotime(substr($daterange, 0, 10)));
+		// $end = date('Y-m-d', strtotime(substr($daterange, 13, 10)));
+		// $start = date('Y-m-d', strtotime(substr($daterange, 0, 10)));
+
+		// echo "<pre>"; print_r($_GET); echo "</pre> <br/><br/>";
+
+		$end = date('Y-m-d', strtotime($_GET['ToDate']));
+		$start = date('Y-m-d', strtotime($_GET['FromDate']));
 
 		$get = $this->db->query("SELECT committees.*, (SELECT COUNT(EntryID) FROM committee_members WHERE CommitteeID=committees.EntryID AND SessionID='".$_GET['SessionID']."') NoOfMembers, (SELECT COUNT(EntryID) FROM sittings WHERE CommitteeID=committees.EntryID AND SessionID='".$_GET['SessionID']."' AND DATE(SittingDate) >= '".date('Y-m-d', strtotime($start))."' AND DATE(SittingDate) <= '".date('Y-m-d', strtotime($end))."' ) TimesSat FROM committees");
 
@@ -810,6 +815,149 @@ class Reports_model extends CI_Model {
 		if($get->num_rows() > 0)
 		{
 			return $get->result_array();
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	################################## SESSION REPORTS ##############################################
+
+	function get_custom_committees_sess()
+	{
+		$session_id = $_GET['session_id'];
+
+		// echo "<pre>"; print_r($_GET); echo "</pre> <br/><br/>";
+
+		$get = $this->db->query("SELECT committees.*, (SELECT COUNT(EntryID) FROM committee_members WHERE CommitteeID=committees.EntryID AND SessionID='".$session_id."') NoOfMembers, (SELECT COUNT(EntryID) FROM sittings WHERE CommitteeID=committees.EntryID AND SessionID='".$session_id."') TimesSat FROM committees");
+
+
+		if($get->num_rows() > 0)
+		{
+			return $get->result_array();
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	function get_bills_committees_sess()
+	{
+		if(empty($_GET['session_id']))
+		{
+			$session = get_current_session($this);
+		}
+		else
+		{
+			$session = $_GET['session_id'];
+		}
+
+		$get = $this->db->query("SELECT committees.*, (SELECT COUNT(EntryID) FROM bills WHERE CommitteeID=committees.EntryID AND SessionID='".$session."' AND Status='ACTIVE') BillsCount, (SELECT COUNT(EntryID) FROM bills WHERE CommitteeID=committees.EntryID AND SessionID='".$session."' AND BillStatus='Y' AND Status='ACTIVE') ReportConcluded, (SELECT COUNT(EntryID) FROM bills WHERE CommitteeID=committees.EntryID AND SessionID='".$session."' AND BillStatus='D' AND Status='ACTIVE') ReportDraft, (SELECT COUNT(EntryID) FROM bills WHERE CommitteeID=committees.EntryID AND SessionID='".$session."' AND BillStatus='N' AND Status='ACTIVE') NoReport FROM committees");
+
+
+		if($get->num_rows() > 0)
+		{
+			return $get->result_array();
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	function get_oversight_committees_sess()
+	{
+		if(empty($_GET['session_id']))
+		{
+			$session = get_current_session($this);
+		}
+		else
+		{
+			$session = $_GET['session_id'];
+		}
+
+		$get = $this->db->query("SELECT committees.*, (SELECT COUNT(EntryID) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='".$session."' AND Status='ACTIVE') OversightCount, (SELECT COUNT(EntryID) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='".$session."' AND ReportStatus='Y' AND Status='ACTIVE') ReportConcluded, (SELECT COUNT(EntryID) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='".$session."' AND ReportStatus='D' AND Status='ACTIVE') ReportDraft, (SELECT COUNT(EntryID) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='".$session."' AND ReportStatus='N' AND Status='ACTIVE') NoReport FROM committees");
+
+		if($get->num_rows() > 0)
+		{
+			return $get->result_array();
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	function get_benchmarking_committees_sess()
+	{
+		if(empty($_GET['session_id']))
+		{
+			$session = get_current_session($this);
+		}
+		else
+		{
+			$session = $_GET['session_id'];
+		}
+
+		$get = $this->db->query("SELECT committees.*, (SELECT COUNT(EntryID) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='".$session."' AND Status='ACTIVE') BenchmarkingCount, (SELECT COUNT(EntryID) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='".$session."' AND ReportStatus='Y' AND Status='ACTIVE') ReportConcluded, (SELECT COUNT(EntryID) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='".$session."' AND ReportStatus='D' AND Status='ACTIVE') ReportDraft, (SELECT COUNT(EntryID) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='".$session."' AND ReportStatus='N' AND Status='ACTIVE') NoReport FROM committees");
+
+		if($get->num_rows() > 0)
+		{
+			return $get->result_array();
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	function get_individual_mps_sess()
+	{
+		if(empty($_GET['session_id']))
+		{
+			$session = get_current_session($this);
+		}
+		else
+		{
+			$session = $_GET['session_id'];
+		}
+
+		$get = $this->db->query("SELECT m.*, (SELECT COUNT(c.EntryID) FROM committee_members c WHERE c.MpID=m.EntryID AND c.SessionID='".$session."' AND c.IsActive='Y') NoOfCommittees, (SELECT COUNT(a.EntryID) FROM attendance a LEFT JOIN sittings s ON a.SittingID=s.EntryID WHERE a.MpID=m.EntryID AND a.AttendanceStatus='present' AND s.SessionID='".$session."' AND s.Status='ACTIVE') Present, (SELECT COUNT(a.EntryID) FROM attendance a LEFT JOIN sittings s ON a.SittingID=s.EntryID WHERE a.MpID=m.EntryID AND a.AttendanceStatus='absent' AND s.SessionID='".$session."' AND s.Status='ACTIVE') Absent, (SELECT COUNT(a.EntryID) FROM attendance a LEFT JOIN sittings s ON a.SittingID=s.EntryID WHERE a.MpID=m.EntryID AND a.AttendanceStatus='awo' AND s.SessionID='".$session."' AND s.Status='ACTIVE') Awo, (SELECT COUNT(o.EntryID) FROM oversight_members o LEFT JOIN oversight_visits ov ON o.OversightID=ov.EntryID WHERE o.MpID=m.EntryID AND ov.SessionID='".$session."' AND ov.Status='ACTIVE') FieldTrips, (SELECT COUNT(b.EntryID) FROM benchmarking_members b LEFT JOIN benchmarking_visits bv ON b.BenchmarkID=bv.EntryID WHERE b.MpID=m.EntryID AND bv.SessionID='".$session."' AND bv.Status='ACTIVE') TravelsAbroad FROM mps m WHERE m.Status='ACTIVE' AND m.SessionID='".$session."'");
+
+
+		if($get->num_rows() > 0)
+		{
+			return $get->result_array();
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	function get_mps_committees_sess($mpID, $sessionID)
+	{
+		$get = $this->db->query("SELECT c.EntryID, c.Title, c.Category FROM committee_members m LEFT JOIN committees c ON m.CommitteeID=c.EntryID WHERE m.MpID='$mpID' AND m.SessionID='$sessionID' AND m.IsActive='Y'");
+
+		if($get->num_rows() > 0)
+		{
+			return $get->result_array();
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	function get_individual_mp_sess($mpid, $sessionID)
+	{
+		$get = $this->db->query("SELECT m.*, (SELECT COUNT(c.EntryID) FROM committee_members c WHERE c.MpID=m.EntryID AND c.SessionID='$sessionID') NoOfCommittees, (SELECT COUNT(a.EntryID) FROM attendance a LEFT JOIN sittings s ON a.SittingID=s.EntryID WHERE a.MpID=m.EntryID AND a.AttendanceStatus='present' AND s.Status='ACTIVE' AND s.SessionID='$sessionID') Present, (SELECT COUNT(a.EntryID) FROM attendance a LEFT JOIN sittings s ON a.SittingID=s.EntryID WHERE a.MpID=m.EntryID AND a.AttendanceStatus='absent' AND s.Status='ACTIVE' AND s.SessionID='$sessionID') Absent, (SELECT COUNT(a.EntryID) FROM attendance a LEFT JOIN sittings s ON a.SittingID=s.EntryID WHERE a.MpID=m.EntryID AND a.AttendanceStatus='awo' AND s.Status='ACTIVE' AND s.SessionID='$sessionID') Awo, (SELECT COUNT(o.EntryID) FROM oversight_members o LEFT JOIN oversight_visits ov ON o.OversightID=ov.EntryID WHERE o.MpID=m.EntryID AND ov.Status='ACTIVE' AND ov.SessionID='$sessionID') FieldTrips, (SELECT COUNT(b.EntryID) FROM benchmarking_members b LEFT JOIN benchmarking_visits bv ON b.BenchmarkID=bv.EntryID WHERE b.MpID=m.EntryID AND bv.Status='ACTIVE' AND bv.SessionID='$sessionID') TravelsAbroad FROM mps m WHERE m.EntryID='$mpid'");
+
+		if($get->num_rows() > 0)
+		{
+			return $get->row_array();
 		}
 		else
 		{

@@ -85,9 +85,9 @@
               </li>
               <li class="<?php if($active == 'report_ta_sess'){ echo 'active'; } ?>"><a class="d-flex align-items-center" href="<?php echo base_url(); ?>session_reports/travels_abroad_report"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Edit">Travels Abroad</span></a>
               </li>
-              <!-- <li class="<?php #if($active == 'report_mps_sess'){ echo 'active'; } ?>"><a class="d-flex align-items-center" href="<?php #echo base_url(); ?>session_reports/mps_report"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Edit">Individual MPs</span></a>
+              <li class="<?php if($active == 'report_mps_sess'){ echo 'active'; } ?>"><a class="d-flex align-items-center" href="<?php echo base_url(); ?>session_reports/mps_report"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Edit">Individual MPs</span></a>
               </li>
-              <li class="<?php #if($active == 'report_alloc_sess'){ echo 'active'; } ?>"><a class="d-flex align-items-center" href="<?php #echo base_url(); ?>session_reports/budget_allocation"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Edit">Committee Budgets</span></a>
+              <!-- <li class="<?php #if($active == 'report_alloc_sess'){ echo 'active'; } ?>"><a class="d-flex align-items-center" href="<?php #echo base_url(); ?>session_reports/budget_allocation"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Edit">Committee Budgets</span></a>
               </li>
               <li class="<?php #if($active == 'mps_history_sess'){ echo 'active'; } ?>"><a class="d-flex align-items-center" href="<?php #echo base_url(); ?>session_reports/committee_history"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Edit">Committee History</span></a> -->
               </li>

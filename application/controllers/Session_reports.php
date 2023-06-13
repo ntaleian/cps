@@ -258,6 +258,8 @@ class Session_reports extends CI_Controller {
 			$data['msg'] = "Please select Session";
 		}
 
+		$data['sessions'] = $this->reports->get_sessions();
+
 		$data['prev'] = 'Session Reports';
 		$data['curr'] = 'Travels Abroad';
 		$data['page_title'] = 'Travels Abroad Reports';
@@ -268,6 +270,98 @@ class Session_reports extends CI_Controller {
 		$this->load->view('incl/header');
 		$this->load->view('incl/sidebar', $data);
 		$this->load->view('session_reports/travels_abroad', $data);
+		$this->load->view('incl/footer');
+	}
+
+	function view_committee_benchmarking()
+	{
+		$getid = $this->input->get('id');
+		$getsess = $this->input->get('session');
+
+		$get_sittings = $this->reports->get_committee_benchmarking_rep_sess($getid, $getsess);
+
+		if($get_sittings)
+		{
+			$data['benchmarking'] = $get_sittings;
+		}
+
+		$committee = $this->settings->get_committee($getid)['Title'];
+		
+		$data['url'] = $this->input->get('id');
+		$data['urlComm'] = $this->input->get('committee');
+
+		$data['committee'] = $committee;
+
+		$data['prev'] = 'Session Reports';
+		$data['curr'] = 'Travels Abroad';
+		$data['page_title'] = 'Travels Abroad Reports for '.$data['committee'];
+
+		$data['active'] = "report_ta_sess";
+
+		$this->load->view('incl/head');
+		$this->load->view('incl/header');
+		$this->load->view('incl/sidebar', $data);
+		$this->load->view('reports/committee_benchmarking', $data);
+		$this->load->view('incl/footer');
+	}
+
+	function mps_report()
+	{
+		if(isset($_GET['submit']))
+		{
+			// $data['committees'] = $this->reports->get_benchmarking_committees_sess();
+			$data['mps'] = $this->reports->get_individual_mps_sess();
+
+			$session = $_GET['session_id'];
+			$sess_name = $this->settings->get_session($session);	
+
+			$data['msg'] = "Individual MPs Report For Session: <b>".$sess_name->SessionName."</b>";
+		}
+		else
+		{
+			// $data['committees'] = $this->reports->get_benchmarking_committees_sess();
+			$data['mps'] = $this->reports->get_individual_mps_sess();
+
+			$data['msg'] = "Please select Session";
+		}
+
+		$data['sessions'] = $this->reports->get_sessions();
+
+		$data['prev'] = 'Session Reports';
+		$data['curr'] = 'MPs Report';
+		$data['page_title'] = 'Individual MPs Reports'; 
+
+		$data['active'] = "report_mps_sess";
+
+		$this->load->view('incl/head');
+		$this->load->view('incl/header');
+		$this->load->view('incl/sidebar', $data);
+		$this->load->view('session_reports/individual_mps', $data);
+		$this->load->view('incl/footer');
+	}
+
+	function view_mp_record()
+	{
+		$getid = $this->input->get('id');
+		$getsess = $this->input->get('session');
+
+		$data['name'] = $this->reports->get_mps_details($getid)['Name'];
+
+		$data['committees'] = $this->reports->get_mps_committees_sess($getid, $getsess);
+		$data['mp_record'] = $this->reports->get_individual_mp_sess($getid, $getsess);
+
+		$data['mpid'] = $getid;
+
+		$data['prev'] = 'Reports';
+		$data['curr'] = 'MPs Report';
+		$data['page_title'] = 'Individual MP Report for '.$data['name'];
+
+		$data['active'] = "report_mps_sess";
+
+		$this->load->view('incl/head');
+		$this->load->view('incl/header');
+		$this->load->view('incl/sidebar', $data);
+		$this->load->view('reports/mp_record', $data);
 		$this->load->view('incl/footer');
 	}
 
