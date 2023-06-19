@@ -93,11 +93,12 @@
                                 <td><?php echo $counter; ?></td>
                                 <?php 
                                   $commID = $committee['EntryID'];
-                                  if(!empty($_GET['ReqDate']))
+                                  if(!empty($_GET['FromDate']))
                                   {
-                                    $daterange = $_GET['ReqDate'];
-                                    $end = date('Y-m-d', strtotime(substr($daterange, 13, 10)));
-                                    $start = date('Y-m-d', strtotime(substr($daterange, 0, 10)));
+                                    $from = $_GET['FromDate'];
+                                    $to = $_GET['ToDate'];
+                                    $end = date('Y-m-d', strtotime($to));
+                                    $start = date('Y-m-d', strtotime($from));
 
                                     $url_txt = "&start=".$start."&end=".$end;
 
