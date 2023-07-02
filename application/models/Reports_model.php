@@ -579,7 +579,7 @@ class Reports_model extends CI_Model {
 
 		// if($usertype == "super" || $usertype == "overall")
 		// {
-			$get = $this->db->query("SELECT committees.*, (SELECT Amount FROM budget_alloc WHERE CommitteeID=committees.EntryID AND SessionID='$sessionID' AND AllocType='FT') FTTotal,(SELECT Amount FROM budget_alloc WHERE CommitteeID=committees.EntryID AND SessionID='$sessionID' AND AllocType='TA') TATotal, (SELECT SUM(Amount) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='$sessionID' AND Status='ACTIVE') FieldAmt, (SELECT SUM(Amount) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='$sessionID' AND Status='ACTIVE') TravelAmt FROM committees");
+			$get = $this->db->query("SELECT committees.*, (SELECT SUM(Amount) FROM budget_alloc WHERE CommitteeID=committees.EntryID AND SessionID='$sessionID' AND AllocType='FT') FTTotal,(SELECT SUM(Amount) FROM budget_alloc WHERE CommitteeID=committees.EntryID AND SessionID='$sessionID' AND AllocType='TA') TATotal, (SELECT SUM(Amount) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='$sessionID' AND Status='ACTIVE') FieldAmt, (SELECT SUM(Amount) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='$sessionID' AND Status='ACTIVE') TravelAmt FROM committees");
 		// }
 
 		// else

@@ -60,6 +60,8 @@ class Settings extends CI_Controller {
 		$data['alloc'] = $alloc;
 
 		$data['committee'] = $this->settings->get_committee($realid);
+		$data['quarters'] = $this->settings->get_quarters();
+		$data['budget'] = $this->settings->get_budget_records($realid, $alloc);
 
 		$data['prev'] = 'Settings';
 		$data['curr'] = 'Committees';
@@ -70,7 +72,8 @@ class Settings extends CI_Controller {
 		$this->load->view('incl/head');
 		$this->load->view('incl/header');
 		$this->load->view('incl/sidebar', $data);
-		$this->load->view('settings/add_money', $data);
+		// $this->load->view('settings/add_money', $data);
+		$this->load->view('settings/manage_money', $data);
 		$this->load->view('incl/footer');
 		
 	}
@@ -93,13 +96,16 @@ class Settings extends CI_Controller {
 			redirect(base_url()."settings/allocation");
 		}
 
-		$commid = $this->input->get('id');
+		$id = $this->input->get('id');
+		$data['id'] = $id;
+
+		$commid = $this->input->get('committee');
 		$realid = $commid;
 
 		$alloc = $this->input->get('alloc');
 		$data['alloc'] = $alloc;
 
-		$data['committee'] = $this->settings->get_alloc_details($realid, $alloc);
+		$data['committee'] = $this->settings->get_alloc_details($id, $realid, $alloc);
 
 		$data['prev'] = 'Settings';
 		$data['curr'] = 'Committees';

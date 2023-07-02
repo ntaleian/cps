@@ -88,11 +88,11 @@ class Settings_model extends CI_Model {
 
 		if($usertype == "overall")
 		{
-			$get = $this->db->query("SELECT c.*, (SELECT Amount FROM budget_alloc b WHERE b.CommitteeID=c.EntryID AND b.SessionID='$sessid' AND b.AllocType='FT') as FT, (SELECT Amount FROM budget_alloc b WHERE b.CommitteeID=c.EntryID AND b.SessionID='$sessid' AND b.AllocType='TA') as TA FROM committees c");
+			$get = $this->db->query("SELECT c.*, (SELECT SUM(Amount) FROM budget_alloc b WHERE b.CommitteeID=c.EntryID AND b.SessionID='$sessid' AND b.AllocType='FT') as FT, (SELECT SUM(Amount) FROM budget_alloc b WHERE b.CommitteeID=c.EntryID AND b.SessionID='$sessid' AND b.AllocType='TA') as TA FROM committees c");
 		}
 		else
 		{
-			$get = $this->db->query("SELECT c.*, (SELECT Amount FROM budget_alloc b WHERE b.CommitteeID=c.EntryID AND b.SessionID='$sessid' AND b.AllocType='FT') as FT, (SELECT Amount FROM budget_alloc b WHERE b.CommitteeID=c.EntryID AND b.SessionID='$sessid' AND b.AllocType='TA') as TA FROM committees c LEFT JOIN committee_users u ON c.EntryID=u.CommitteeID WHERE u.UserID='$userid' AND u.IsActive='Y'");
+			$get = $this->db->query("SELECT c.*, (SELECT SUM(Amount) FROM budget_alloc b WHERE b.CommitteeID=c.EntryID AND b.SessionID='$sessid' AND b.AllocType='FT') as FT, (SELECT SUM(Amount) FROM budget_alloc b WHERE b.CommitteeID=c.EntryID AND b.SessionID='$sessid' AND b.AllocType='TA') as TA FROM committees c LEFT JOIN committee_users u ON c.EntryID=u.CommitteeID WHERE u.UserID='$userid' AND u.IsActive='Y'");
 		}
 
 		if($get->num_rows() > 0)
@@ -111,7 +111,7 @@ class Settings_model extends CI_Model {
 
 		$userid = $this->session->userdata('alluserdata')[0]['EntryID'];
 
-		$insert = $this->db->query("INSERT INTO budget_alloc (CommitteeID, SessionID, AllocType, Amount, AddedBy, DateAdded) VALUES ('".$_POST['CommitteeID']."', '$sessid', '".$_POST['AllocType']."', '".$_POST['Amount']."', '$userid', NOW())");
+		$insert = $this->db->query("INSERT INTO budget_alloc (CommitteeID, SessionID, AllocType, QuarterID, Amount, AddedBy, DateAdded) VALUES ('".$_POST['CommitteeID']."', '$sessid', '".$_POST['AllocType']."', '".$_POST['QuarterID']."', '".$_POST['Amount']."', '$userid', NOW())");
 
 		if($insert)
 		{
@@ -167,9 +167,9 @@ class Settings_model extends CI_Model {
 		}
 	}
 
-	function get_alloc_details($id, $AllocType)
+	function get_alloc_details($id, $commid, $AllocType)
 	{
-		$get = $this->db->query("SELECT b.*, c.EntryID AS CommID, c.Title FROM budget_alloc b LEFT JOIN committees c ON b.CommitteeID=c.EntryID WHERE b.CommitteeID='$id' AND b.SessionID='".get_current_session($this)."' AND b.AllocType='$AllocType'");
+		$get = $this->db->query("SELECT b.*, c.EntryID AS CommID, c.Title FROM budget_alloc b LEFT JOIN committees c ON b.CommitteeID=c.EntryID WHERE b.EntryID='$id' AND b.CommitteeID='$commid' AND b.SessionID='".get_current_session($this)."' AND b.AllocType='$AllocType'");
 
 		if($get->num_rows() > 0)
 		{
@@ -584,6 +584,30 @@ class Settings_model extends CI_Model {
 		if($update)
 		{
 			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	function get_quarters()
+	{
+		$get = $this->db->query("SELECT * FROM quarters");
+
+		return $get->result_array();
+	}
+
+	function get_budget_records($realid, $alloc)
+	{
+		$sessid = $this->session->userdata('alluserdata')[0]['SessionID'];
+		$userid = $this->session->userdata('alluserdata')[0]['EntryID'];
+
+		$get = $this->db->query("SELECT b.*, (SELECT title FROM quarters WHERE id=b.QuarterID) AS QuarterName FROM budget_alloc b WHERE b.SessionID='$sessid' AND b.AllocType='$alloc' ");
+
+		if($get->num_rows() > 0)
+		{
+			return $get->result_array();
 		}
 		else
 		{
