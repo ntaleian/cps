@@ -63,12 +63,12 @@ class Dashboard_model extends CI_Model {
 
 		if($usertype == "super" || $usertype="overall")
 		{
-			$get = $this->db->query("SELECT COUNT(EntryID) AS TotalSittings FROM sittings WHERE SessionID='".get_current_session($this)."'");
+			$get = $this->db->query("SELECT COUNT(EntryID) AS TotalSittings FROM sittings WHERE SessionID='".get_current_session($this)."' AND Status='ACTIVE' ");
 		}
 		else
 		{
 			// $get = $this->db->query("SELECT COUNT(s.EntryID) AS TotalSittings FROM sittings s LEFT OUTER JOIN committees c ON s.CommitteeID=c.EntryID LEFT JOIN committee_users u ON c.EntryID=u.CommitteeID WHERE s.ClerkID='$userid' AND c.EntryID=u.CommitteeID GROUP BY s.CommitteeID");
-			$get = $this->db->query("SELECT COUNT(s.EntryID) AS TotalSittings FROM sittings s LEFT OUTER JOIN committees c ON s.CommitteeID=c.EntryID LEFT JOIN committee_users u ON c.EntryID=u.CommitteeID WHERE c.EntryID=u.CommitteeID AND u.UserID='$userid' AND s.SessionID='".get_current_session($this)."' GROUP BY s.CommitteeID AND s.Status='ACTIVE'");
+			$get = $this->db->query("SELECT COUNT(s.EntryID) AS TotalSittings FROM sittings s LEFT OUTER JOIN committees c ON s.CommitteeID=c.EntryID LEFT JOIN committee_users u ON c.EntryID=u.CommitteeID WHERE c.EntryID=u.CommitteeID AND u.UserID='$userid' AND s.SessionID='".get_current_session($this)."' AND s.Status='ACTIVE' GROUP BY s.CommitteeID");
 		}
 
 		if($get->num_rows() > 0)
