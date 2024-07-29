@@ -135,27 +135,27 @@
                                                           <input type="hidden" name="Url" value="<?php echo $url; ?>">
                                                           <input type="hidden" name="CommUrl" value="<?php echo $urlComm; ?>">
 
-                                                            <div class="col-md-12">
+                                                            <div class="col-md-12 mb-2">
                                                                 <label class="control-label">Field Trip Title</label>
                                                                 <input class="form-control form-white" value="<?php echo $bill['VisitTitle']; ?>" type="text" name="VisitTitle" />
                                                             </div>
 
-                                                            <div class="col-md-12">
+                                                            <div class="col-md-12 mb-2">
                                                                <label class="mt-10 font-12">From Date</label>
                                                                <input type="text" class="form-control mrdate" value="<?php echo date('Y-m-d', strtotime($bill['FromDate'])); ?>" id="mdat" name="FromDate">
                                                             </div>
 
-                                                            <div class="col-md-12">
+                                                            <div class="col-md-12 mb-2">
                                                                <label class="mt-10 font-12">To Date</label>
                                                                <input type="text" class="form-control mrdate" value="<?php echo date('Y-m-d', strtotime($bill['ToDate'])); ?>" id="mdat" name="ToDate">
                                                             </div>
 
-                                                            <div class="col-md-12">
+                                                            <div class="col-md-12 mb-2">
                                                                 <label class="control-label">Field Trip Amount</label>
                                                                 <input class="form-control form-white" value="<?php echo $bill['Amount']; ?>" type="text" name="Amount" />
                                                             </div>
 
-                                                            <div class="col-md-12">
+                                                            <div class="col-md-12 mb-2">
                                                               <label class="control-label">Report Status</label>
                                                               <select class="form-control form-white" name="ReportStatus" id="ReportStatus">
                                                                   <option value="Y" <?php if($bill['ReportStatus'] == 'Y'){ echo "selected"; } ?> >Report Concluded and Signed</option>

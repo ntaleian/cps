@@ -83,6 +83,7 @@
                             <th>Members</th>
                             <th>Sittings</th>
                             <th>Attendance(%)</th>
+                            <th>Latest</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -154,6 +155,7 @@
 
                                 ?>
                                 <td><?php if($per <= 50){ echo "<span class='text-danger'>".number_format($per, 0)." %"; } else { echo number_format($per, 0)." %"; } ?></td>
+                                <td><?php echo $committee['LatestDate']; ?></td>
                               </tr>
                             <?php 
                                 $counter++;

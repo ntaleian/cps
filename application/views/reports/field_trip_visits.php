@@ -45,7 +45,7 @@
                                   $commID = $committee['EntryID'];
                                   $commTitle = $committee['Title'];
                                 ?>
-                                <td><a href="<?php echo base_url(); ?>session_reports/view_committee_oversight?id=<?php echo $commID; ?>&committee=<?php echo $commTitle; ?>"><?php echo $committee['Title']; ?></a></td>
+                                <td><a href="<?php echo base_url(); ?>reports/view_committee_oversight?id=<?php echo $commID; ?>&committee=<?php echo $commTitle; ?>"><?php echo $committee['Title']; ?></a></td>
                                 <td><?php echo $committee['Category']; ?></td>
                                 <td><?php echo $committee['OversightCount']; ?></td>
                                 <td><?php echo $committee['ReportConcluded']; ?></td>

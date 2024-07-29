@@ -27,7 +27,7 @@
                         <p>Please ensure that you have properly select all members' attendance statuses before submitting</p>
                       </div>
 
-                      <div class="col-md-6">
+                      <div class="col-md-4">
                         <h6>Pick Date</h6>
                         <div class="form-group">
                           <fieldset class="form-group position-relative has-icon-left">
@@ -38,12 +38,24 @@
                           </fieldset>
                         </div>
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-4">
                         <h6>Summary Title of the Sitting</h6>
                         <div class="form-group">
                           <input type="text" id="first-name-icon" class="form-control" name="SittingTitle" placeholder="Summary Title">
                         </div>
                       </div>
+
+                      <!-- <div class="col-md-8">
+                        <h6>Choose Sitting Category</h6>
+                        <div class="form-group">
+                          <select class="select2 form-control" name="Category">
+                            <option value="" disabled selected>---Choose Session---</option>
+                            <?php #foreach($sessions as $session){ ?>
+                            <option value="<?php #echo $session['EntryID']; ?>"><?php echo $session['SessionName']; ?></option>
+                            <?php } ?>
+                          </select>
+                        </div>
+                      </div> -->
 
                       <input type="hidden" name="CommitteeID" value="<?php echo $committeeID; ?>">
 

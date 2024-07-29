@@ -30,6 +30,7 @@
                             <th>#</th>
                             <th>Name</th>
                             <th>Date of 1st Hearing</th>
+                            <th>Comments</th>
                             <th>Committee</th>
                             <th>Report Status</th>
                             <th>Clerk in Charge</th>
@@ -46,6 +47,7 @@
                                   <td><?php echo $counter; ?></td>
                                   <td><?php echo $bill['BillName']; ?></td>
                                   <td><?php echo date('l jS F Y', strtotime($bill['DateProcessed'])); ?></td>
+                                  <td><?php echo $bill['Comments']; ?></td>
                                   <td><?php echo $bill['Title']; ?></td>
                                   <td><?php if($bill['BillStatus'] == 'Y'){ echo "Report Concluded and Signed"; } else if($bill['BillStatus'] == 'N'){ echo "Report Not Concluded"; } else if($bill['BillStatus'] == 'D'){ echo "Report in Draft Form"; } ?></td>
                                   <td><?php echo $bill['Fullname']; ?></td>
@@ -82,23 +84,28 @@
                                                             <input type="hidden" name="Url" value="<?php echo $url; ?>">
                                                             <input type="hidden" name="CommUrl" value="<?php echo $urlComm; ?>">
 
-                                                              <div class="col-md-12">
+                                                              <div class="col-md-12 mb-2">
                                                                   <label class="control-label">Bill Name</label>
                                                                   <input class="form-control form-white" value="<?php echo $bill['BillName']; ?>" type="text" name="BillName" />
                                                               </div>
 
-                                                              <div class="col-md-12">
+                                                              <div class="col-md-12 mb-2">
                                                                  <label class="mt-10 font-12">Date of 1st Hearing</label>
                                                                  <input type="text" class="form-control mrdate" value="<?php echo date('Y-m-d', strtotime($bill['DateProcessed'])); ?>" id="mdat" name="DateProcessed">
                                                               </div>
 
-                                                              <div class="col-md-12">
+                                                              <div class="col-md-12 mb-2">
                                                                 <label class="control-label">Report Status</label>
                                                                 <select class="form-control form-white" name="BillStatus" id="BillStatus">
                                                                     <option value="Y" <?php if($bill['BillStatus'] == 'Y'){ echo "selected"; } ?> >Report Concluded and Signed</option>
                                                                     <option value="D" <?php if($bill['BillStatus'] == 'D'){ echo "selected"; } ?> >Report in Draft Form</option>
                                                                     <option value="N" <?php if($bill['BillStatus'] == 'N'){ echo "selected"; } ?> >Report Not Available</option>
                                                                 </select>
+                                                              </div>
+
+                                                              <div class="col-md-12">
+                                                                <label class="control-label">Comments: </label>
+                                                                  <textarea class="form-control form-white" rows="3" name="Comments" placeholder="Enter Comments"><?php echo $bill['Comments']; ?></textarea>
                                                               </div>
 
                                                               <div class="col-md-12">

@@ -16,17 +16,17 @@ class Reports_model extends CI_Model {
 
 		$sessionID = $this->session->userdata('alluserdata')[0]['SessionID'];
 
-		// if($usertype == "super" || $usertype == "overall")
-		// {
-			$get = $this->db->query("SELECT committees.*, (SELECT COUNT(EntryID) FROM committee_members WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."') NoOfMembers, (SELECT COUNT(EntryID) FROM sittings WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."') TimesSat FROM committees");
-		// }
+		if($usertype == "super" || $usertype == "overall")
+		{
+			$get = $this->db->query("SELECT s.* FROM (SELECT committees.*, (SELECT COUNT(EntryID) FROM committee_members WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."') NoOfMembers, (SELECT COUNT(EntryID) FROM sittings WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."') TimesSat, (SELECT MAX(SittingDate) FROM sittings WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' LIMIT 1) LatestDate FROM committees) s ORDER BY s.LatestDate DESC");
+		}
 
-		// else
-		// {
+		else
+		{
 
-		// $get = $this->db->query("SELECT committees.*, (SELECT COUNT(EntryID) FROM committee_members WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."') NoOfMembers, (SELECT COUNT(EntryID) FROM sittings WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."') TimesSat FROM committees LEFT JOIN committee_users ON committees.EntryID=committee_users.CommitteeID WHERE committee_users.UserID='$userid' AND committee_users.IsActive='Y'");
+		$get = $this->db->query(" SELECT s.* FROM (SELECT committees.*, (SELECT COUNT(EntryID) FROM committee_members WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."') NoOfMembers, (SELECT COUNT(EntryID) FROM sittings WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."') TimesSat , (SELECT MAX(SittingDate) FROM sittings WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' LIMIT 1) LatestDate FROM committees LEFT JOIN committee_users ON committees.EntryID=committee_users.CommitteeID WHERE committee_users.UserID='$userid' AND committee_users.IsActive='Y') s ORDER BY s.LatestDate DESC");
 
-		// }
+		}
 
 		if($get->num_rows() > 0)
 		{
@@ -200,16 +200,16 @@ class Reports_model extends CI_Model {
 
 		$usertype = $this->session->userdata('alluserdata')[0]['Usertype'];
 
-		// if($usertype == "super" || $usertype == "overall")
-		// {
+		if($usertype == "super" || $usertype == "overall")
+		{
 
 			$get = $this->db->query("SELECT committees.*, (SELECT COUNT(EntryID) FROM bills WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND Status='ACTIVE') BillsCount, (SELECT COUNT(EntryID) FROM bills WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND BillStatus='Y' AND Status='ACTIVE') ReportConcluded, (SELECT COUNT(EntryID) FROM bills WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND BillStatus='D' AND Status='ACTIVE') ReportDraft, (SELECT COUNT(EntryID) FROM bills WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND BillStatus='N' AND Status='ACTIVE') NoReport FROM committees");
-		// }
-		// else
-		// {
+		}
+		else
+		{
 
-		// $get = $this->db->query("SELECT committees.*, (SELECT COUNT(EntryID) FROM bills WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND Status='ACTIVE') BillsCount, (SELECT COUNT(EntryID) FROM bills WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND BillStatus='Y' AND Status='ACTIVE') ReportConcluded, (SELECT COUNT(EntryID) FROM bills WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND BillStatus='D' AND Status='ACTIVE') ReportDraft, (SELECT COUNT(EntryID) FROM bills WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND BillStatus='N' AND Status='ACTIVE') NoReport FROM committees LEFT JOIN committee_users ON committees.EntryID=committee_users.CommitteeID WHERE committee_users.UserID='$userid' AND committee_users.IsActive='Y'");
-		// }
+		$get = $this->db->query("SELECT committees.*, (SELECT COUNT(EntryID) FROM bills WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND Status='ACTIVE') BillsCount, (SELECT COUNT(EntryID) FROM bills WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND BillStatus='Y' AND Status='ACTIVE') ReportConcluded, (SELECT COUNT(EntryID) FROM bills WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND BillStatus='D' AND Status='ACTIVE') ReportDraft, (SELECT COUNT(EntryID) FROM bills WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND BillStatus='N' AND Status='ACTIVE') NoReport FROM committees LEFT JOIN committee_users ON committees.EntryID=committee_users.CommitteeID WHERE committee_users.UserID='$userid' AND committee_users.IsActive='Y'");
+		}
 
 		if($get->num_rows() > 0)
 		{
@@ -278,7 +278,7 @@ class Reports_model extends CI_Model {
 
 	function update_bill()
 	{
-		$update = $this->db->query("UPDATE bills SET BillName=".$this->db->escape($_POST['BillName']).", DateProcessed='".date('Y-m-d', strtotime(str_replace("/", "-", $_POST['DateProcessed'])))."', BillStatus='".$_POST['BillStatus']."' WHERE EntryID='".$_POST['EntryID']."'");
+		$update = $this->db->query("UPDATE bills SET BillName=".$this->db->escape($_POST['BillName']).", DateProcessed='".date('Y-m-d', strtotime(str_replace("/", "-", $_POST['DateProcessed'])))."', BillStatus='".$_POST['BillStatus']."', Comments=".$this->db->escape($_POST['Comments'])." WHERE EntryID='".$_POST['EntryID']."'");
 
 		if($update)
 		{
@@ -296,16 +296,16 @@ class Reports_model extends CI_Model {
 
 		$usertype = $this->session->userdata('alluserdata')[0]['Usertype'];
 
-		// if($usertype == "super" || $usertype == "overall")
-		// {
+		if($usertype == "super" || $usertype == "overall")
+		{
 			$get = $this->db->query("SELECT committees.*, (SELECT COUNT(EntryID) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND Status='ACTIVE') OversightCount, (SELECT COUNT(EntryID) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND ReportStatus='Y' AND Status='ACTIVE') ReportConcluded, (SELECT COUNT(EntryID) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND ReportStatus='D' AND Status='ACTIVE') ReportDraft, (SELECT COUNT(EntryID) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND ReportStatus='N' AND Status='ACTIVE') NoReport FROM committees");
-		// }
+		}
 
-		// else
-		// {
+		else
+		{
 
-		// 	$get = $this->db->query("SELECT committees.*, (SELECT COUNT(EntryID) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND Status='ACTIVE') OversightCount, (SELECT COUNT(EntryID) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND ReportStatus='Y' AND Status='ACTIVE') ReportConcluded, (SELECT COUNT(EntryID) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND ReportStatus='D' AND Status='ACTIVE') ReportDraft, (SELECT COUNT(EntryID) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND ReportStatus='N' AND Status='ACTIVE') NoReport FROM committees LEFT JOIN committee_users ON committees.EntryID=committee_users.CommitteeID WHERE committee_users.UserID='$userid' AND committee_users.IsActive='Y'");
-		// }
+			$get = $this->db->query("SELECT committees.*, (SELECT COUNT(EntryID) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND Status='ACTIVE') OversightCount, (SELECT COUNT(EntryID) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND ReportStatus='Y' AND Status='ACTIVE') ReportConcluded, (SELECT COUNT(EntryID) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND ReportStatus='D' AND Status='ACTIVE') ReportDraft, (SELECT COUNT(EntryID) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND ReportStatus='N' AND Status='ACTIVE') NoReport FROM committees LEFT JOIN committee_users ON committees.EntryID=committee_users.CommitteeID WHERE committee_users.UserID='$userid' AND committee_users.IsActive='Y'");
+		}
 
 		if($get->num_rows() > 0)
 		{
@@ -405,16 +405,16 @@ class Reports_model extends CI_Model {
 
 		$usertype = $this->session->userdata('alluserdata')[0]['Usertype'];
 
-		// if($usertype == "super" || $usertype == "overall")
-		// {
+		if($usertype == "super" || $usertype == "overall")
+		{
 			$get = $this->db->query("SELECT committees.*, (SELECT COUNT(EntryID) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND Status='ACTIVE') BenchmarkingCount, (SELECT COUNT(EntryID) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND ReportStatus='Y' AND Status='ACTIVE') ReportConcluded, (SELECT COUNT(EntryID) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND ReportStatus='D' AND Status='ACTIVE') ReportDraft, (SELECT COUNT(EntryID) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND ReportStatus='N' AND Status='ACTIVE') NoReport FROM committees");
-		// }
+		}
 
-		// else
-		// {
+		else
+		{
 
-		// 	$get = $this->db->query("SELECT committees.*, (SELECT COUNT(EntryID) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND Status='ACTIVE') BenchmarkingCount, (SELECT COUNT(EntryID) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND ReportStatus='Y' AND Status='ACTIVE') ReportConcluded, (SELECT COUNT(EntryID) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND ReportStatus='D' AND Status='ACTIVE') ReportDraft, (SELECT COUNT(EntryID) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND ReportStatus='N' AND Status='ACTIVE') NoReport FROM committees LEFT JOIN committee_users ON committees.EntryID=committee_users.CommitteeID WHERE committee_users.UserID='$userid' AND committee_users.IsActive='Y'");
-		// }
+			$get = $this->db->query("SELECT committees.*, (SELECT COUNT(EntryID) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND Status='ACTIVE') BenchmarkingCount, (SELECT COUNT(EntryID) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND ReportStatus='Y' AND Status='ACTIVE') ReportConcluded, (SELECT COUNT(EntryID) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND ReportStatus='D' AND Status='ACTIVE') ReportDraft, (SELECT COUNT(EntryID) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='".get_current_session($this)."' AND ReportStatus='N' AND Status='ACTIVE') NoReport FROM committees LEFT JOIN committee_users ON committees.EntryID=committee_users.CommitteeID WHERE committee_users.UserID='$userid' AND committee_users.IsActive='Y'");
+		}
 
 		if($get->num_rows() > 0)
 		{
@@ -577,16 +577,16 @@ class Reports_model extends CI_Model {
 
 		$sessionID = $this->session->userdata('alluserdata')[0]['SessionID'];
 
-		// if($usertype == "super" || $usertype == "overall")
-		// {
+		if($usertype == "super" || $usertype == "overall")
+		{
 			$get = $this->db->query("SELECT committees.*, (SELECT SUM(Amount) FROM budget_alloc WHERE CommitteeID=committees.EntryID AND SessionID='$sessionID' AND AllocType='FT') FTTotal,(SELECT SUM(Amount) FROM budget_alloc WHERE CommitteeID=committees.EntryID AND SessionID='$sessionID' AND AllocType='TA') TATotal, (SELECT SUM(Amount) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='$sessionID' AND Status='ACTIVE') FieldAmt, (SELECT SUM(Amount) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='$sessionID' AND Status='ACTIVE') TravelAmt FROM committees");
-		// }
+		}
 
-		// else
-		// {
+		else
+		{
 
-		// 	$get = $this->db->query("SELECT committees.*, (SELECT Amount FROM budget_alloc WHERE CommitteeID=committees.EntryID AND SessionID='$sessionID' AND AllocType='FT') FTTotal,(SELECT Amount FROM budget_alloc WHERE CommitteeID=committees.EntryID AND SessionID='$sessionID' AND AllocType='TA') TATotal, (SELECT SUM(Amount) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='$sessionID' AND Status='ACTIVE') FieldAmt, (SELECT SUM(Amount) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='$sessionID' AND Status='ACTIVE') TravelAmt FROM committees LEFT JOIN committee_users ON committees.EntryID=committee_users.CommitteeID WHERE committee_users.UserID='$userid' AND committee_users.IsActive='Y'");
-		// }
+			$get = $this->db->query("SELECT committees.*, (SELECT Amount FROM budget_alloc WHERE CommitteeID=committees.EntryID AND SessionID='$sessionID' AND AllocType='FT') FTTotal,(SELECT Amount FROM budget_alloc WHERE CommitteeID=committees.EntryID AND SessionID='$sessionID' AND AllocType='TA') TATotal, (SELECT SUM(Amount) FROM oversight_visits WHERE CommitteeID=committees.EntryID AND SessionID='$sessionID' AND Status='ACTIVE') FieldAmt, (SELECT SUM(Amount) FROM benchmarking_visits WHERE CommitteeID=committees.EntryID AND SessionID='$sessionID' AND Status='ACTIVE') TravelAmt FROM committees LEFT JOIN committee_users ON committees.EntryID=committee_users.CommitteeID WHERE committee_users.UserID='$userid' AND committee_users.IsActive='Y'");
+		}
 
 		if($get->num_rows() > 0)
 		{
