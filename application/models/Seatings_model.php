@@ -71,7 +71,7 @@ class Seatings_model extends CI_Model {
 		// echo $SittingDate; exit;
 		// echo date('Y-m-d', strtotime(str_replace("/", "-", $SittingDate))); exit;
 
-		$insertSitting = $this->db->query("INSERT INTO sittings(CommitteeID, ClerkID, SittingTitle, SittingDate, SessionID, TS) VALUES ('$CommitteeID', '".$this->session->userdata('alluserdata')[0]['EntryID']."', ".$this->db->escape($SittingTitle).", '".date('Y-m-d', strtotime(str_replace("/", "-", $SittingDate)))."', '$SessionID', '".date('Y-m-d H:i:s')."')");
+		$insertSitting = $this->db->query("INSERT INTO sittings(CommitteeID, ClerkID, SittingTitle, SittingDate, SittingCat, SessionID, TS) VALUES ('$CommitteeID', '".$this->session->userdata('alluserdata')[0]['EntryID']."', ".$this->db->escape($SittingTitle).", '".date('Y-m-d', strtotime(str_replace("/", "-", $SittingDate)))."', '".$_POST['SittingCat']."', '$SessionID', '".date('Y-m-d H:i:s')."')");
 
 		$sitID = $this->db->insert_id();
 
@@ -120,6 +120,20 @@ class Seatings_model extends CI_Model {
 		}
 
 		return true;
+	}
+
+	function get_sittings_categories()
+	{
+		$get = $this->db->query("SELECT * FROM sitting_categories");
+
+		if($get->num_rows() > 0)
+		{
+			return $get->result_array();
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
 

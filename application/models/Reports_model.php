@@ -46,11 +46,33 @@ class Reports_model extends CI_Model {
 
 		// echo "<pre>"; print_r($_GET); echo "</pre> <br/><br/>";
 
+		$userid = $this->session->userdata('alluserdata')[0]['EntryID'];
+
+		$usertype = $this->session->userdata('alluserdata')[0]['Usertype'];
+
 		$end = date('Y-m-d', strtotime($_GET['ToDate']));
 		$start = date('Y-m-d', strtotime($_GET['FromDate']));
 
-		$get = $this->db->query("SELECT committees.*, (SELECT COUNT(EntryID) FROM committee_members WHERE CommitteeID=committees.EntryID AND SessionID='".$_GET['SessionID']."') NoOfMembers, (SELECT COUNT(EntryID) FROM sittings WHERE CommitteeID=committees.EntryID AND SessionID='".$_GET['SessionID']."' AND DATE(SittingDate) >= '".date('Y-m-d', strtotime($start))."' AND DATE(SittingDate) <= '".date('Y-m-d', strtotime($end))."' ) TimesSat FROM committees");
+		#catqry
+		if($_GET['Category'] == 'all')
+		{
+			$catqry = "";
+		}
+		else
+		{
+			$catqry = " AND SittingCat='".$_GET['Category']."' ";
+		}
 
+		if($usertype == "super" || $usertype == "overall")
+		{
+
+			$get = $this->db->query("SELECT committees.*, (SELECT COUNT(EntryID) FROM committee_members WHERE CommitteeID=committees.EntryID AND SessionID='".$_GET['SessionID']."') NoOfMembers, (SELECT COUNT(EntryID) FROM sittings WHERE CommitteeID=committees.EntryID AND SessionID='".$_GET['SessionID']."' AND DATE(SittingDate) >= '".date('Y-m-d', strtotime($start))."' AND DATE(SittingDate) <= '".date('Y-m-d', strtotime($end))."' ".$catqry." ) TimesSat FROM committees");
+
+		}
+		else
+		{
+			$get = $this->db->query("SELECT committees.*, (SELECT COUNT(EntryID) FROM committee_members WHERE CommitteeID=committees.EntryID AND SessionID='".$_GET['SessionID']."') NoOfMembers, (SELECT COUNT(EntryID) FROM sittings WHERE CommitteeID=committees.EntryID AND SessionID='".$_GET['SessionID']."' AND DATE(SittingDate) >= '".date('Y-m-d', strtotime($start))."' AND DATE(SittingDate) <= '".date('Y-m-d', strtotime($end))."' ".$catqry." ) TimesSat FROM committees LEFT JOIN committee_users ON committees.EntryID=committee_users.CommitteeID WHERE committee_users.UserID='$userid' AND committee_users.IsActive='Y'");
+		}
 
 		if($get->num_rows() > 0)
 		{
@@ -73,7 +95,7 @@ class Reports_model extends CI_Model {
 			$tstr = "";
 		}
 
-		$get = $this->db->query("SELECT sittings.*, CONCAT(users.Firstname,' ', users.Lastname) AS Fullname, committees.Title AS CommitteeTitle FROM sittings LEFT JOIN users ON sittings.ClerkID=users.EntryID LEFT JOIN committees ON sittings.CommitteeID=committees.EntryID WHERE sittings.CommitteeID='$committeeID' ".$tstr." AND sittings.SessionID='".get_current_session($this)."' AND sittings.Status='ACTIVE'");
+		$get = $this->db->query("SELECT sittings.*, CONCAT(users.Firstname,' ', users.Lastname) AS Fullname, committees.Title AS CommitteeTitle, (SELECT category FROM sitting_categories WHERE id=sittings.SittingCat) AS SittingCategory FROM sittings LEFT JOIN users ON sittings.ClerkID=users.EntryID LEFT JOIN committees ON sittings.CommitteeID=committees.EntryID WHERE sittings.CommitteeID='$committeeID' ".$tstr." AND sittings.SessionID='".get_current_session($this)."' AND sittings.Status='ACTIVE' ORDER BY sittings.EntryID DESC ");
 
 		if($get->num_rows() > 0)
 		{
@@ -126,7 +148,7 @@ class Reports_model extends CI_Model {
 
 	function get_sittings_rep($committeeID, $fromDate, $toDate)
 	{
-		$get = $this->db->query("SELECT sittings.*, CONCAT(users.Firstname,' ', users.Lastname) AS Fullname, committees.Title AS CommitteeTitle FROM sittings LEFT JOIN users ON sittings.ClerkID=users.EntryID LEFT JOIN committees ON sittings.CommitteeID=committees.EntryID WHERE sittings.CommitteeID='$committeeID' AND sittings.SittingDate BETWEEN '".date('Y-m-d', strtotime($fromDate))."' AND '".date('Y-m-d', strtotime($toDate))."' AND sittings.Status='ACTIVE'");
+		$get = $this->db->query("SELECT sittings.*, CONCAT(users.Firstname,' ', users.Lastname) AS Fullname, committees.Title AS CommitteeTitle FROM sittings LEFT JOIN users ON sittings.ClerkID=users.EntryID LEFT JOIN committees ON sittings.CommitteeID=committees.EntryID WHERE sittings.CommitteeID='$committeeID' AND sittings.SittingDate BETWEEN '".date('Y-m-d', strtotime($fromDate))."' AND '".date('Y-m-d', strtotime($toDate))."' AND sittings.Status='ACTIVE' ORDER BY sittings.EntryID DESC ");
 
 		if($get->num_rows() > 0)
 		{

@@ -45,17 +45,17 @@
                         </div>
                       </div>
 
-                      <!-- <div class="col-md-8">
+                      <div class="col-md-4">
                         <h6>Choose Sitting Category</h6>
                         <div class="form-group">
-                          <select class="select2 form-control" name="Category">
-                            <option value="" disabled selected>---Choose Session---</option>
-                            <?php #foreach($sessions as $session){ ?>
-                            <option value="<?php #echo $session['EntryID']; ?>"><?php echo $session['SessionName']; ?></option>
+                          <select class="select2 form-control" name="SittingCat">
+                            <option value="" disabled selected>---Choose category---</option>
+                            <?php foreach($cats as $cat){ ?>
+                            <option value="<?php echo $cat['id']; ?>"><?php echo $cat['category']; ?></option>
                             <?php } ?>
                           </select>
                         </div>
-                      </div> -->
+                      </div>
 
                       <input type="hidden" name="CommitteeID" value="<?php echo $committeeID; ?>">
 

@@ -52,6 +52,7 @@ class Sittings extends CI_Controller {
 			// $data['SittingTitle'] = $_POST['SittingTitle'];
 
 			$data['members'] = $members;
+			$data['cats'] = $this->seatings->get_sittings_categories();
 
 			$data['prev'] = 'Committee Business';
 			$data['curr'] = 'Manage Sittings';

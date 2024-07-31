@@ -19,17 +19,30 @@ class Reports extends CI_Controller {
 		if(isset($_GET['submit']))
 		{
 			$data['committees'] = $this->reports->get_custom_committees();
+			$data['cats'] = $this->seatings->get_sittings_categories();
 
 			$daterange = $_GET['ReqDate'];
 			$end = date('Y-m-d', strtotime($_GET['ToDate']));
 			$start = date('Y-m-d', strtotime($_GET['FromDate']));
 
-			$data['msg'] = "Attendance Report From ".$start." To ".$end;
+			$cat = $_GET['Category'];
+			if($cat == 'all')
+			{
+				$category = "All Categories";
+			}
+			else
+			{
+				$getcat = $this->db->query("SELECT category FROM sitting_categories WHERE id='".$_GET['Category']."' ")->row_array()['category'];
+				$category = $getcat." Category";
+			}
+
+			$data['msg'] = "Attendance Report From ".$start." To ".$end." For ".$category;
 		}
 		else
 		{
 			$data['msg'] = "Please select start and end date to generate a custom report";
 			$data['committees'] = $this->reports->get_committees();
+			$data['cats'] = $this->seatings->get_sittings_categories();
 		}
 
 		$data['prev'] = 'Reports';

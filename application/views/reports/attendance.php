@@ -50,6 +50,18 @@
                         </fieldset>
                       </div>
 
+                      <div class="col-md-3">
+                        <fieldset class="form-group position-relative has-icon-left">
+                          <label for="basicInput">Choose Sitting Category</label>
+                            <select class="select2 form-control" name="Category">
+                              <option value="all">All Categories</option>
+                              <?php foreach($cats as $cat){ ?>
+                              <option value="<?php echo $cat['id']; ?>" <?php if($_GET['Category'] == $cat['id']){ echo 'selected'; } ?> ><?php echo $cat['category']; ?></option>
+                              <?php } ?>
+                            </select>
+                        </fieldset>
+                      </div>
+
                       <div class="col-3">
                         <div style="top: 12px;">&nbsp;</div>
                         <button type="submit" name="submit" value="submit" class="btn btn-primary mr-1">Generate Report</button>
@@ -121,6 +133,9 @@
                                     $daterange = $_GET['ReqDate'];
                                     $end = date('Y-m-d', strtotime(substr($daterange, 13, 10)));
                                     $start = date('Y-m-d', strtotime(substr($daterange, 0, 10)));
+
+                                    $start = date('Y-m-d', strtotime($_GET['FromDate']));
+                                    $end = date('Y-m-d', strtotime($_GET['ToDate']));
 
                                     $qstr = "DATE(SittingDate) >= '".date('Y-m-d', strtotime($start))."' AND DATE(SittingDate) <= '".date('Y-m-d', strtotime($end))."' AND ";
                                   }

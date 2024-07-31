@@ -49,6 +49,7 @@
                             <th>Action</th>
                             <th>Topic Summary</th>
                             <th>Sitting Date</th>
+                            <th>Category</th>
                             <th>Present</th>
                             <th>Absent</th>
                             <th>A.W.A</th>
@@ -69,11 +70,11 @@
 
                                 <div class="btn-group" role="group" aria-label="Basic example">
 
-                                  <span data-toggle="modal" data-target="#edit_sitt-<?php echo $sitting['EntryID']; ?>"><button type="button" class="btn btn-outline-secondary" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="bx bxs-edit"></i></button></span>
+                                  <span data-toggle="modal" data-target="#edit_sitt-<?php echo $sitting['EntryID']; ?>"><button type="button" class="btn btn-sm btn-outline-secondary" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><i class="bx bxs-edit"></i></button></span>
 
-                                  <a href="<?php echo base_url(); ?>reports/view_member_attendance?id=<?php echo $sittID; ?>" class="btn btn-outline-primary" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="" data-original-title="View Record"><i class="bx bx-window-open"></i></a>
+                                  <a href="<?php echo base_url(); ?>reports/view_member_attendance?id=<?php echo $sittID; ?>" class="btn btn-sm btn-outline-primary" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="" data-original-title="View Record"><i class="bx bx-window-open"></i></a>
 
-                                  <span data-toggle="modal" data-target="#delete_sitt-<?php echo $sitting['EntryID']; ?>"><button type="button" class="btn btn-outline-danger"aria-hidden="true" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="bx bx-x"></i></button></span>
+                                  <span data-toggle="modal" data-target="#delete_sitt-<?php echo $sitting['EntryID']; ?>"><button type="button" class="btn btn-sm btn-outline-danger"aria-hidden="true" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="bx bx-x"></i></button></span>
 
                                 </div>
 
@@ -82,6 +83,7 @@
                               </td>
                               <td><b><a href="<?php echo base_url(); ?>reports/view_member_attendance?id=<?php echo $sittID; ?>"><?php echo $sitting['SittingTitle']; ?></a></b></td>
                               <td><?php echo date('l jS F Y', strtotime($sitting['SittingDate'])); ?></td>
+                              <td><?php if(empty($sitting['SittingCategory'])){ echo "<span class='text-danger'>Undefined</span>"; } else { echo $sitting['SittingCategory']; } ?></td>
                               <?php
                                 $qry = $this->db->query("SELECT (SELECT COUNT(EntryID) FROM attendance WHERE SittingID='".$sitting['EntryID']."' AND AttendanceStatus='present') AS Present, (SELECT COUNT(EntryID) FROM attendance WHERE SittingID='".$sitting['EntryID']."' AND AttendanceStatus='absent') AS Absent, (SELECT COUNT(EntryID) FROM attendance WHERE SittingID='".$sitting['EntryID']."' AND AttendanceStatus='awo') AS Awo");
 
@@ -109,12 +111,12 @@
                                                         <input type="hidden" name="EntryID" value="<?php echo $sitting['EntryID']; ?>">
                                                         <input type="hidden" name="Url" value="<?php echo $url; ?>">
 
-                                                          <div class="col-md-12">
+                                                          <div class="col-md-12 mb-2">
                                                               <label class="control-label">Sitting Summary Title</label>
                                                               <input class="form-control form-white" value="<?php echo $sitting['SittingTitle']; ?>" type="text" name="SittingTitle" />
                                                           </div>
 
-                                                          <div class="col-md-12">
+                                                          <div class="col-md-12 mb-2">
                                                              <label class="mt-10 font-12">Sitting Date</label>
                                                              <input type="text" class="form-control mrdate" value="<?php echo date('Y-m-d', strtotime($sitting['SittingDate'])); ?>" id="mdat" name="SittingDate">
                                                           </div>
